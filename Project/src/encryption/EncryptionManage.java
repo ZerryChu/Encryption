@@ -18,14 +18,14 @@ public class EncryptionManage {
 	public static void runEncryption(JCheckBox[] box, String keySavePath,
 			String filePath, String savePath) throws IOException {
 		TXTHandler.write2(keySavePath, savePath + ": ");
-		String planText = TXTHandler.read(filePath);
-		String chipher;
+		byte[] planText = TXTHandler.readBytes(filePath);
+		byte[] chipher;
 		for (int i = 0; i < box.length; i++) {
 			if (i == 0) {
 				if (true == box[0].isSelected()) {
-					String key = getRandomCharKey(planText.length());
+					String key = getRandomCharKey(planText.length);
 					TXTHandler.write2(keySavePath, key + " ");
-					chipher = ColumnEncryption.encryption(planText, key);
+					chipher = ColumnEncryption2.encryption(planText, key);
 					planText = chipher;
 				} else
 					TXTHandler.write2(keySavePath, "null" + " ");
@@ -38,7 +38,7 @@ public class EncryptionManage {
 						str += String.valueOf(key[j]);
 					}
 					TXTHandler.write2(keySavePath, str + " ");
-					chipher = ReplaceEncryption.encryption(planText, key);
+					chipher = ReplaceEncryption2.encryption(planText, key);
 					planText = chipher;
 				} else
 					TXTHandler.write2(keySavePath, "null" + " ");
@@ -47,7 +47,7 @@ public class EncryptionManage {
 				if (true == box[i].isSelected()) {
 					String key = getRandomCharKey(10);
 					TXTHandler.write2(keySavePath, key + " ");
-					chipher = Rc4Encryption.HloveyRC4(planText, key);
+				    chipher = Rc4Encryption2.HloveyRC4(planText, key);
 					planText = chipher;
 				} else
 					TXTHandler.write2(keySavePath, "null" + " ");
@@ -63,7 +63,7 @@ public class EncryptionManage {
 			}
 		}
 		TXTHandler.write2(keySavePath, "\r\n"); // 换行
-		TXTHandler.write(savePath, planText);
+		TXTHandler.writeBytes(savePath, planText);
 	}
 
 	/*
@@ -75,18 +75,18 @@ public class EncryptionManage {
 	public static boolean runDecryption(JCheckBox[] box, String filePath, 
 			String savePath) throws Exception {
 		Stack<String> keys = new Stack<>();
-		String cipher = TXTHandler.read(filePath);
+		byte[] cipher = TXTHandler.readBytes(filePath);
 		String key;
 		TXTHandler.parse("keys.txt", filePath, keys);
 		System.out.println(keys);
-		for (int i = box.length - 1; i >= 0; i--) { //debug: 加密后密文长度变短
+		for (int i = box.length - 1; i >= 0; i--) {
 			if (i == 0) {
 				key = keys.pop();
 				if(key.equals("null")) {
 					continue;
 				}
 				if(true == box[i].isSelected()) {
-					cipher = ColumnEncryption.decryption(cipher, key);
+					cipher = ColumnEncryption2.decryption(cipher, key);
 				}
 			}
 			if (i == 1) { 
@@ -101,7 +101,7 @@ public class EncryptionManage {
 						temp += key.charAt(j);
 						intKey[j] = Integer.parseInt(temp);
 					}
-					cipher = ReplaceEncryption.decryption(cipher, intKey);
+					cipher = ReplaceEncryption2.decryption(cipher, intKey);
 				}
 			}
 			if (i == 2) {
@@ -109,7 +109,7 @@ public class EncryptionManage {
 				if(key.equals("null"))
 					continue;
 				if(true == box[i].isSelected()) {
-					cipher = Rc4Encryption.HloveyRC4(cipher, key);
+					cipher = Rc4Encryption2.HloveyRC4(cipher, key);
 				}
 			}
 			if (i == 3) {
@@ -117,14 +117,13 @@ public class EncryptionManage {
 				if(key.equals("null"))
 					continue;
 				if(true == box[i].isSelected()) {
-					byte[] cipherBytes = DesEncryption.decryption(cipher.getBytes(), key);
-					//cipherBytes怎么存
+					cipher = DesEncryption.decryption(cipher, key);
 				}
 			}
 		}
-		TXTHandler.write(savePath, cipher);
+		TXTHandler.writeBytes(savePath, cipher);
 		return true;
-		//解密完删除密钥
+		//解密完请手动删除密钥
 	}
 
 	public static String getRandomCharKey(int len) {
