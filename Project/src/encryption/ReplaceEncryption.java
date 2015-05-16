@@ -11,12 +11,15 @@ public class ReplaceEncryption {
      * return: ÃÜÎÄ
 	 */
 	public static String encryption(String planText, int[] key) {
-		char[] data = new char[100010];
-		for(int i = 0;i < key.length; i++) {
+		char[] data = new char[planText.length()];
+		for(int i = 0;i < planText.length(); i++) {
 			data[i] = planText.charAt(i);
-			data[i] += key[i];
+			if(data[i] == ' ' || data[i] == '\n')
+				 continue;
+			data[i] = (char)(key[i % 10] + data[i]);
+
 		}
-		return data.toString();
+		return String.valueOf(data);
 	}
 	
 	/*
@@ -25,11 +28,20 @@ public class ReplaceEncryption {
 	 * return: Ô­ÎÄ
 	 */
 	public static String decryption(String cipher, int[] key) {
-		char[] data = new char[100010];
-		for(int i = 0;i < key.length; i++) {
+		char[] data = new char[cipher.length()];
+		for(int i = 0;i < cipher.length(); i++) {
 			data[i] = cipher.charAt(i);
-			data[i] -= key[i];
+			if(data[i] == ' ' || data[i] == '\n')
+				continue;
+			data[i] = (char)(data[i] - key[i % 10]);
 		}
-		return data.toString();
+		return String.valueOf(data);
 	}
+	/*
+	public static void main(String[] args) {
+		int[] keys = {1,2,1,1,1,0,1,1,0,2};
+		String cipher = ReplaceEncryption.decryption("j mpwe jrkt j bm {ets{- iaib jb# ", keys);
+		System.out.println(cipher);
+	}
+	*/
 }

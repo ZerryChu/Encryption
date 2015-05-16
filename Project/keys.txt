@@ -1,0 +1,2 @@
+#格式 原文绝对路径： 密钥1 密钥2 密钥3 密钥4（null代表空)
+C:\Users\lenovo\Desktop\chipher.txt: null null UTIRIKMPMX null 

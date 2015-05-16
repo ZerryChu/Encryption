@@ -13,9 +13,12 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
+
+import encryption.EncryptionManage;
 
 public class Window extends JFrame {
 	private JTextField filePathText;
@@ -23,6 +26,7 @@ public class Window extends JFrame {
 	private JPanel mainPanel;
 	private String filePath;
 	private String savePath;
+	private JCheckBox[] box;
 
 	public Window() {
 		this.setTitle("多维加密");
@@ -96,7 +100,14 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				// for()
+				try {
+					EncryptionManage.runEncryption(box, "keys.txt",
+							filePathText.getText(), savePathText.getText());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				// 弹框： 成功操作
 			}
 		});
 		encrypeButtom.setBounds(65, 166, 93, 23);
@@ -107,31 +118,45 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-
+				try {
+					boolean flag = EncryptionManage.runDecryption(box,
+							filePathText.getText(), savePathText.getText());
+					System.out.println(flag);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				// 弹框：操作成功
+				catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		decrypeButton.setBounds(242, 166, 93, 23);
 		mainPanel.add(decrypeButton);
 
-		JCheckBox Box1 = new JCheckBox("\u7F6E\u6362\u52A0\u5BC6");
-		Box1.setBackground(new Color(220, 220, 220));
-		Box1.setBounds(25, 117, 79, 23);
-		mainPanel.add(Box1);
+		box = new JCheckBox[4];
 
-		JCheckBox Box2 = new JCheckBox("\u4EE3\u6362\u52A0\u5BC6");
-		Box2.setBounds(117, 117, 85, 23);
-		Box2.setBackground(new Color(220, 220, 220));
-		mainPanel.add(Box2);
+		box[0] = new JCheckBox("\u7F6E\u6362\u52A0\u5BC6");
+		box[0].setBackground(new Color(220, 220, 220));
+		box[0].setBounds(25, 117, 79, 23);
+		mainPanel.add(box[0]);
 
-		JCheckBox Box3 = new JCheckBox("RC4\u7B97\u6CD5");
-		Box3.setBounds(204, 117, 85, 23);
-		Box3.setBackground(new Color(220, 220, 220));
-		mainPanel.add(Box3);
+		box[1] = new JCheckBox("\u4EE3\u6362\u52A0\u5BC6");
+		box[1].setBounds(117, 117, 85, 23);
+		box[1].setBackground(new Color(220, 220, 220));
+		mainPanel.add(box[1]);
 
-		JCheckBox Box4 = new JCheckBox("DES\u7B97\u6CD5");
-		Box4.setBounds(298, 117, 74, 23);
-		Box4.setBackground(new Color(220, 220, 220));
-		mainPanel.add(Box4);
+		box[2] = new JCheckBox("RC4\u7B97\u6CD5");
+		box[2].setBounds(204, 117, 85, 23);
+		box[2].setBackground(new Color(220, 220, 220));
+		mainPanel.add(box[2]);
+
+		box[3] = new JCheckBox("DES\u7B97\u6CD5");
+		box[3].setBounds(298, 117, 74, 23);
+		box[3].setBackground(new Color(220, 220, 220));
+		mainPanel.add(box[3]);
 
 		this.setResizable(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
