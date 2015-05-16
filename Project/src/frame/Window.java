@@ -2,6 +2,7 @@ package frame;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -14,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.EmptyStackException;
 
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
@@ -106,8 +108,10 @@ public class Window extends JFrame {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "未知错误", "", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
-				// 弹框： 成功操作
+				JOptionPane.showMessageDialog(null, "操作成功", "", JOptionPane.DEFAULT_OPTION);
 			}
 		});
 		encrypeButtom.setBounds(65, 166, 93, 23);
@@ -119,18 +123,29 @@ public class Window extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				try {
-					boolean flag = EncryptionManage.runDecryption(box,
+					EncryptionManage.runDecryption(box,
 							filePathText.getText(), savePathText.getText());
-					System.out.println(flag);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "文件路径无法匹配", "", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
-				// 弹框：操作成功
+				catch (NullPointerException e1) {
+					// TODO: handle exception
+					JOptionPane.showMessageDialog(null, "密钥无法对应", "", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				catch (EmptyStackException e1) {
+					JOptionPane.showMessageDialog(null, "密钥无法对应", "", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "未知错误", "", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
+				JOptionPane.showMessageDialog(null, "操作成功", "", JOptionPane.DEFAULT_OPTION);
 			}
 		});
 		decrypeButton.setBounds(242, 166, 93, 23);

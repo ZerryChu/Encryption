@@ -1,11 +1,13 @@
 package encryption;
 
 import java.io.IOException;
+import java.util.EmptyStackException;
 import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
 
 import javax.swing.JCheckBox;
+import javax.xml.ws.handler.MessageContext;
 
 public class EncryptionManage {
 	/*
@@ -72,13 +74,12 @@ public class EncryptionManage {
 	 * savePath 解密后原文存储路径
 	 * box与加密相反的读取顺序，即顺序读入密钥存入栈中,以后进先出的方式取出密钥解密
 	 */
-	public static boolean runDecryption(JCheckBox[] box, String filePath, 
+	public static void runDecryption(JCheckBox[] box, String filePath, 
 			String savePath) throws Exception {
 		Stack<String> keys = new Stack<>();
 		byte[] cipher = TXTHandler.readBytes(filePath);
 		String key;
 		TXTHandler.parse("keys.txt", filePath, keys);
-		System.out.println(keys);
 		for (int i = box.length - 1; i >= 0; i--) {
 			if (i == 0) {
 				key = keys.pop();
@@ -122,7 +123,6 @@ public class EncryptionManage {
 			}
 		}
 		TXTHandler.writeBytes(savePath, cipher);
-		return true;
 		//解密完请手动删除密钥
 	}
 
